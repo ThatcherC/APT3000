@@ -185,7 +185,7 @@ wav.prototype.slice = function (start, length, callback) {
 
 /*
  * do we need direct access to  samples?
- *
+ */
 wav.prototype.getSamples = function () {
 
   // TODO load data chunk into buffer
@@ -194,7 +194,6 @@ wav.prototype.getSamples = function () {
   else if (this.bitsPerSample === 16)
     this.dataSamples = new Int16Array(this.buffer, 44, chunkSize/this.blockAlign);
 }
-*/
 
 /**
  * Reads slice from buffer as String
