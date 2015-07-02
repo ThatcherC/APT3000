@@ -17,6 +17,7 @@
 		var lower = 80000;
 		var range = 200;
 		var f32samples;
+		var filteredData;
 		
 		window.onload = function() {
 			try {
@@ -59,12 +60,12 @@
 					console.log("loaded samples");
 					
 					//get filtered stuff
-					var filteredData = new Float32Array(f32samples.length);
+					filteredData = new Float32Array(f32samples.length);
 					for(var i = 0; i < f32samples.length; i++){
 						filteredData[i] = filter.get(i);
 					}
 					
-					updateChart(filteredData);
+					updateChart();
 				};
 				
 			});
@@ -72,12 +73,11 @@
 			
 		}
 		
-		function updateChart(filteredData){
-			
+		function updateChart(){
 			var data = {
 				labels:wavFile.dataSamples.subarray(lower,lower+range),
 				datasets: [
-					{
+					/*{
 						label: "Raw",
 						fillColor: "rgba(180,180,180,0.2)",
 						strokeColor: "rgba(120,120,120,1)",
@@ -86,7 +86,7 @@
 						pointHighlightFill: "#fff",
 						pointHighlightStroke: "rgba(220,220,220,1)",
 						data: f32samples.subarray(lower,lower+range)
-					},
+					},*/
 					{
 						label: "Filtered",
 						fillColor: "rgba(180,180,180,0.2)",
@@ -103,9 +103,9 @@
 			 myChart = new Chart(ctx).Line(data);
 		}
 		
-		function changeRange(newLower,newRange){
-			lower = newLower;
-			range = newRange;
+		function changeRange(dLower,dRange){
+			lower += dLower;
+			range += dRange;
 			updateChart();
 		}
 	</script>
