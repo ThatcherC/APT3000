@@ -3,11 +3,12 @@
 <script src="wav.js"></script>
 <script src="dsp.js"></script>
 <script src="demodulator-am.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <title>APT-3000</title>
 </head>
 <body>
-	<input type="file" id="fileInput">
-
+	<input type="file" id="fileInput"></br>
+	<canvas id="myChart" width="1000" height="400"></canvas>
 	<script>
 		var wavFile;
 		window.onload = function() {
@@ -20,16 +21,48 @@
 			
 			var fileInput = document.getElementById('fileInput');
 			var fileDisplayArea = document.getElementById('fileDisplayArea');
-
+			var ctx = document.getElementById("myChart").getContext("2d");
+			
 			fileInput.addEventListener('change', function(e) {
 				var file = fileInput.files[0];
-				console.log(file);
+				//console.log(file);
 				
 				wavFile = new wav(file);
-				waveFile.onloadend = function () {
+				wavFile.onloadend = function () {
 					console.log("loaded");
+					console.log(wavFile);
+					
+					var lower = 80000;
+					var range = 200;
+					
+					//rectification
+					for(var c = 0; c<wavFile.dataSamples.length;c++){
+						wavFile.dataSamples[c] = Math.abs(wavFile.dataSamples[c]);
+					}
+					
+					var data = {
+						labels:wavFile.dataSamples.subarray(lower,lower+range),
+						datasets: [
+							{
+								label: "My First dataset",
+								fillColor: "rgba(180,180,180,0.2)",
+								strokeColor: "rgba(120,120,120,1)",
+								pointColor: "rgba(220,220,220,1)",
+								pointStrokeColor: "#fff",
+								pointHighlightFill: "#fff",
+								pointHighlightStroke: "rgba(220,220,220,1)",
+								data: wavFile.dataSamples.subarray(lower,lower+range)
+							}
+						]
+					};
+					
+					var myNewChart = new Chart(ctx).Line(data);
+					
 				};
+				
 			});
+			
+			
 		}
 	</script>
 
