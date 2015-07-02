@@ -11,6 +11,13 @@
 	<canvas id="myChart" width="1000" height="400"></canvas>
 	<script>
 		var wavFile;
+		var ctx;
+		var myChart;
+			
+		var lower = 80000;
+		var range = 200;
+		var f32samples;
+		
 		window.onload = function() {
 			try {
 			  FileReader = FileReader;
@@ -21,7 +28,7 @@
 			
 			var fileInput = document.getElementById('fileInput');
 			var fileDisplayArea = document.getElementById('fileDisplayArea');
-			var ctx = document.getElementById("myChart").getContext("2d");
+			ctx = document.getElementById("myChart").getContext("2d");
 			
 			fileInput.addEventListener('change', function(e) {
 				var file = fileInput.files[0];
@@ -32,37 +39,74 @@
 					console.log("loaded");
 					console.log(wavFile);
 					
-					var lower = 80000;
-					var range = 200;
-					
 					//rectification
 					for(var c = 0; c<wavFile.dataSamples.length;c++){
 						wavFile.dataSamples[c] = Math.abs(wavFile.dataSamples[c]);
 					}
+					console.log("rectified");
 					
-					var data = {
-						labels:wavFile.dataSamples.subarray(lower,lower+range),
-						datasets: [
-							{
-								label: "My First dataset",
-								fillColor: "rgba(180,180,180,0.2)",
-								strokeColor: "rgba(120,120,120,1)",
-								pointColor: "rgba(220,220,220,1)",
-								pointStrokeColor: "#fff",
-								pointHighlightFill: "#fff",
-								pointHighlightStroke: "rgba(220,220,220,1)",
-								data: wavFile.dataSamples.subarray(lower,lower+range)
-							}
-						]
-					};
+					var coeffs = getLowPassFIRCoeffs(11025,1300,9);
+					var filter = new FIRFilter(coeffs);
 					
-					var myNewChart = new Chart(ctx).Line(data);
+					//convert to Float32s
+					f32samples = new Float32Array(wavFile.dataSamples.length);
+					for(var i = 0; i < wavFile.dataSamples.length; i++){
+						f32samples[i] = wavFile.dataSamples[i]/32768;
+					}
 					
+					//initialize filter
+					filter.loadSamples(f32samples);
+					console.log("loaded samples");
+					
+					//get filtered stuff
+					var filteredData = new Float32Array(f32samples.length);
+					for(var i = 0; i < f32samples.length; i++){
+						filteredData[i] = filter.get(i);
+					}
+					
+					updateChart(filteredData);
 				};
 				
 			});
 			
 			
+		}
+		
+		function updateChart(filteredData){
+			
+			var data = {
+				labels:wavFile.dataSamples.subarray(lower,lower+range),
+				datasets: [
+					{
+						label: "Raw",
+						fillColor: "rgba(180,180,180,0.2)",
+						strokeColor: "rgba(120,120,120,1)",
+						pointColor: "rgba(120,120,120,1)",
+						pointStrokeColor: "#fff",
+						pointHighlightFill: "#fff",
+						pointHighlightStroke: "rgba(220,220,220,1)",
+						data: f32samples.subarray(lower,lower+range)
+					},
+					{
+						label: "Filtered",
+						fillColor: "rgba(180,180,180,0.2)",
+						strokeColor: "rgba(240,120,120,1)",
+						pointColor: "rgba(240,120,120,1)",
+						pointStrokeColor: "#fff",
+						pointHighlightFill: "#fff",
+						pointHighlightStroke: "rgba(220,220,220,1)",
+						data: filteredData.subarray(lower,lower+range)
+					}
+				]
+			};
+					
+			 myChart = new Chart(ctx).Line(data);
+		}
+		
+		function changeRange(newLower,newRange){
+			lower = newLower;
+			range = newRange;
+			updateChart();
 		}
 	</script>
 
