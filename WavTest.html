@@ -16,6 +16,7 @@
 			
 		var lower = 80000;
 		var range = 200;
+		var numTaps = 9;
 		var f32samples;
 		var filteredData;
 		
@@ -45,48 +46,50 @@
 						wavFile.dataSamples[c] = Math.abs(wavFile.dataSamples[c]);
 					}
 					console.log("rectified");
-					
-					var coeffs = getLowPassFIRCoeffs(11025,1300,9);
-					var filter = new FIRFilter(coeffs);
-					
-					//convert to Float32s
-					f32samples = new Float32Array(wavFile.dataSamples.length);
-					for(var i = 0; i < wavFile.dataSamples.length; i++){
-						f32samples[i] = wavFile.dataSamples[i]/32768;
-					}
-					
-					//initialize filter
-					filter.loadSamples(f32samples);
-					console.log("loaded samples");
-					
-					//get filtered stuff
-					filteredData = new Float32Array(f32samples.length);
-					for(var i = 0; i < f32samples.length; i++){
-						filteredData[i] = filter.get(i);
-					}
-					
-					updateChart();
-				};
-				
+					filterSamples();
+					};
 			});
 			
 			
+		}
+		
+		function filterSamples(){
+			var coeffs = getLowPassFIRCoeffs(11025,1800,numTaps);
+			var filter = new FIRFilter(coeffs);
+			
+			//convert to Float32s
+			f32samples = new Float32Array(wavFile.dataSamples.length);
+			for(var i = 0; i < wavFile.dataSamples.length; i++){
+				f32samples[i] = wavFile.dataSamples[i]/32768;
+			}
+			
+			//initialize filter
+			filter.loadSamples(f32samples);
+			console.log("loaded samples");
+			
+			//get filtered stuff
+			filteredData = new Float32Array(f32samples.length);
+			for(var i = 0; i < f32samples.length; i++){
+				filteredData[i] = filter.get(i);
+			}
+			
+			updateChart();
 		}
 		
 		function updateChart(){
 			var data = {
 				labels:wavFile.dataSamples.subarray(lower,lower+range),
 				datasets: [
-					/*{
-						label: "Raw",
+					{
+						label: "1040Hz",
 						fillColor: "rgba(180,180,180,0.2)",
 						strokeColor: "rgba(120,120,120,1)",
 						pointColor: "rgba(120,120,120,1)",
 						pointStrokeColor: "#fff",
 						pointHighlightFill: "#fff",
 						pointHighlightStroke: "rgba(220,220,220,1)",
-						data: f32samples.subarray(lower,lower+range)
-					},*/
+						data: [0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1]
+					},
 					{
 						label: "Filtered",
 						fillColor: "rgba(180,180,180,0.2)",
@@ -107,6 +110,11 @@
 			lower += dLower;
 			range += dRange;
 			updateChart();
+		}
+		
+		function setTaps(taps){
+			numTaps = taps;
+			filterSamples();
 		}
 	</script>
 
