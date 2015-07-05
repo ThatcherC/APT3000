@@ -8,7 +8,8 @@
 </head>
 <body>
 	<input type="file" id="fileInput"></br>
-	<canvas id="myChart" width="1000" height="400"></canvas>
+	<canvas id="myChart" width="1000" height="400"></canvas></br></br>
+	<canvas id="output" width="1000" height="400"></canvas>
 	<script>
 		var wavFile;
 		var ctx;
@@ -16,10 +17,14 @@
 			
 		var lower = 80000;
 		var range = 200;
-		var numTaps = 9;
+		var numTaps = 50;
 		var f32samples;
 		var filteredData;
 		var signalMean = 0;
+		
+		//drawing context
+		var imageCTX = document.getElementById("output").getContext("2d");
+		
 		
 		window.onload = function() {
 			try {
@@ -63,32 +68,26 @@
 			}
 			
 			var downsampler = new Downsampler(11025,4160,coeffs);
-			
-			/*
-			//initialize filter
-			filter.loadSamples(f32samples);
-			console.log("loaded samples");
-			
-			//get filtered stuff
-			filteredData = new Float32Array(f32samples.length);
-			for(var i = 0; i < f32samples.length; i++){
-				filteredData[i] = filter.get(i);
-			}
-			*/
 			filteredData = downsampler.downsample(f32samples);
+			console.log("downsampled to 4160Hz");
+			
 			normalizeData();
 			updateChart();
 		}
 		
 		function normalizeData(){
 			var maxVal = 0;
+			var minVal = 1;
 			for(var i = 0; i < filteredData.length; i++){
 				if(filteredData[i]>maxVal){
 					maxVal = filteredData[i];
 				}
+				if(filteredData[i]<minVal){
+					minVal = filteredData[i];
+				}
 			}
 			for(var i = 0; i < filteredData.length; i++){
-				filteredData[i] = filteredData[i]/maxVal;
+				filteredData[i] = (filteredData[i]-minVal)/(maxVal-minVal);
 				signalMean += filteredData[i];
 			}
 			signalMean = signalMean / filteredData.length;
@@ -141,6 +140,27 @@
 			 myChart = new Chart(ctx).Line(data);
 		}
 		
+		//starting index comes from convolution, lineCount comes from math
+		//this kind of comes from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
+		function createImage(startingIndex,lineCount){
+			
+				var image = imageCTX.createImageData(1040,lineCount);
+			//each line
+			for(var line = 0; line < lineCount; line++){
+				//each column, currently only Channel A
+				for(var column = 0; column < 1040; column++){
+					var value = filteredData[startingIndex+line*2080+column]*256;
+					//R=G=B for grayscale
+					image.data[line*1040*4 + column*4]=value;
+					image.data[line*1040*4 + column*4+1]=value;
+					image.data[line*1040*4 + column*4+2]=value;
+					//alpha = 255
+					image.data[line*1040*4 + column*4+3]=255;
+				}
+			}
+			imageCTX.putImageData(image,0,0);
+		}
+			
 		function changeRange(dLower,dRange){
 			lower += dLower;
 			range += dRange;
