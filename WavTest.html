@@ -62,6 +62,9 @@
 				f32samples[i] = wavFile.dataSamples[i]/32768;
 			}
 			
+			var downsampler = new Downsampler(11025,4160,coeffs);
+			
+			/*
 			//initialize filter
 			filter.loadSamples(f32samples);
 			console.log("loaded samples");
@@ -71,6 +74,8 @@
 			for(var i = 0; i < f32samples.length; i++){
 				filteredData[i] = filter.get(i);
 			}
+			*/
+			filteredData = downsampler.downsample(f32samples);
 			normalizeData();
 			updateChart();
 		}
@@ -90,13 +95,13 @@
 		}
 		
 		function convolveWithSync(){
-			var sync = [-1,-1,-1,-1,-1,1,1,1,1,1,];
+			var sync = [-1,-1,1,1];
 			var maxVal = 0;
 			var maxIndex = 0;
 			for(var i = 0; i < 22050; i++){
 				sum = 0;
-				for(var c = 0; c < 50; c++){
-					sum += (filteredData[i+c]-signalMean)*sync[c%10];
+				for(var c = 0; c < 10; c++){
+					sum += (filteredData[i+c]-signalMean)*sync[c%4];
 				}
 				if(sum>maxVal){
 					maxVal = sum;
@@ -118,7 +123,7 @@
 						pointStrokeColor: "#fff",
 						pointHighlightFill: "#fff",
 						pointHighlightStroke: "rgba(220,220,220,1)",
-						data: [0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1]
+						data: [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1]
 					},
 					{
 						label: "Filtered",
