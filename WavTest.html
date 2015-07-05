@@ -19,6 +19,7 @@
 		var numTaps = 9;
 		var f32samples;
 		var filteredData;
+		var signalMean = 0;
 		
 		window.onload = function() {
 			try {
@@ -47,10 +48,8 @@
 					}
 					console.log("rectified");
 					filterSamples();
-					};
+				};
 			});
-			
-			
 		}
 		
 		function filterSamples(){
@@ -72,8 +71,39 @@
 			for(var i = 0; i < f32samples.length; i++){
 				filteredData[i] = filter.get(i);
 			}
-			
+			normalizeData();
 			updateChart();
+		}
+		
+		function normalizeData(){
+			var maxVal = 0;
+			for(var i = 0; i < filteredData.length; i++){
+				if(filteredData[i]>maxVal){
+					maxVal = filteredData[i];
+				}
+			}
+			for(var i = 0; i < filteredData.length; i++){
+				filteredData[i] = filteredData[i]/maxVal;
+				signalMean += filteredData[i];
+			}
+			signalMean = signalMean / filteredData.length;
+		}
+		
+		function convolveWithSync(){
+			var sync = [-1,-1,-1,-1,-1,1,1,1,1,1,];
+			var maxVal = 0;
+			var maxIndex = 0;
+			for(var i = 0; i < 22050; i++){
+				sum = 0;
+				for(var c = 0; c < 50; c++){
+					sum += (filteredData[i+c]-signalMean)*sync[c%10];
+				}
+				if(sum>maxVal){
+					maxVal = sum;
+					maxIndex = i;
+				}
+			}
+			return maxIndex;
 		}
 		
 		function updateChart(){
@@ -88,7 +118,7 @@
 						pointStrokeColor: "#fff",
 						pointHighlightFill: "#fff",
 						pointHighlightStroke: "rgba(220,220,220,1)",
-						data: [0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1,0,0,0,0,0,.1,.1,.1,.1,.1]
+						data: [0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1]
 					},
 					{
 						label: "Filtered",
