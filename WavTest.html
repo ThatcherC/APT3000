@@ -147,12 +147,13 @@
 		//starting index comes from convolution, lineCount comes from math
 		//this kind of comes from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
 		function createImage(startingIndex,lineCount){
+			var lineStartIndex = startingIndex;
 			var image = imageCTX.createImageData(1040,lineCount);
 			//each line
 			for(var line = 0; line < lineCount; line++){
 				//each column, currently only Channel A
 				for(var column = 0; column < 1040; column++){
-					var value = filteredData[startingIndex+line*2080+column]*256;
+					var value = filteredData[lineStartIndex+column]*256;
 					//R=G=B for grayscale
 					image.data[line*1040*4 + column*4]=value;
 					image.data[line*1040*4 + column*4+1]=value;
@@ -160,6 +161,7 @@
 					//alpha = 255
 					image.data[line*1040*4 + column*4+3]=255;
 				}
+				lineStartIndex = convolveWithSync(lineStartIndex+2080-5,10);
 			}
 			imageCTX.putImageData(image,0,0);
 		}

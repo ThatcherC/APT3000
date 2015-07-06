@@ -8,8 +8,9 @@ A browser-based APT decoder for NOAA satellites.
 - [x] Demodulate AM signal
 - [x] Perform convolution to find sync signals
 - [x] Draw image signal onto canvas
-- [ ] Straighten image
+- [x] Straighten image
   - *A good way to do this would be to perform a convolution for every line*
+  - *Some wiggle still exists...
 - [ ] Add scaling to the canvas
 - [ ] Implement image rotation based on satellite orbit (N/S)
   - *Telemetry? User input? File info?*
