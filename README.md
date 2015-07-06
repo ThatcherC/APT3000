@@ -9,13 +9,13 @@ A browser-based APT decoder for NOAA satellites.
 - [x] Perform convolution to find sync signals
 - [x] Draw image signal onto canvas
 - [ ] Straighten image
-  - A good way to do this would be to perform a convolution for every line
+  - *A good way to do this would be to perform a convolution for every line*
 - [ ] Add scaling to the canvas
 - [ ] Implement image rotation based on satellite orbit (N/S)
-  - Telemetry 
+  - *Telemetry? User input? File info?*
 - [ ] Implement false-color correction
 - [ ] Submit a fork/push of ffdead's wav.js
-  - I implemented an effective version of ffdead's blank "getSamples" function
+  - *I implemented an effective version of ffdead's blank "getSamples" function*
 
 
 ###Works Cited 
