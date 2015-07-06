@@ -4,7 +4,7 @@
 
 A browser-based APT decoder for NOAA satellites.
 
-TODO:
+###TODO:
 - [x] Demodulate AM signal
 - [x] Perform convolution to find sync signals
 - [x] Draw image signal onto canvas
@@ -18,7 +18,8 @@ TODO:
   - I implemented an effective version of ffdead's blank "getSamples" function
 
 
-Works cited (helpful pages from around the web):
+###Works Cited 
+*(helpful pages from around the web)*:
 - http://www.ncdc.noaa.gov/oa/pod-guide/ncdc/docs/klm/html/c4/sec4-2.htm
 - http://markroland.com/project/weather-satellite-imaging/APT_decode.m
 - https://github.com/ffdead/wav.js/blob/master/wav.js
