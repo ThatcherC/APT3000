@@ -27,7 +27,8 @@
 		var signalMean = 0;
 		
 		//drawing context
-		var imageCTX = document.getElementById("output").getContext("2d");
+		var imageCanvas = document.getElementById("output");
+		var imageCTX = imageCanvas.getContext("2d");
 		
 		
 		window.onload = function() {
@@ -147,8 +148,10 @@
 		//starting index comes from convolution, lineCount comes from math
 		//this kind of comes from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
 		function createImage(startingIndex,lineCount){
+			imageCanvas.height = lineCount;
 			var lineStartIndex = startingIndex;
 			var image = imageCTX.createImageData(1040,lineCount);
+			console.log(Math.floor(filteredData.length/2080)+" possible lines");
 			//each line
 			for(var line = 0; line < lineCount; line++){
 				//each column, currently only Channel A
@@ -161,7 +164,9 @@
 					//alpha = 255
 					image.data[line*1040*4 + column*4+3]=255;
 				}
-				lineStartIndex = convolveWithSync(lineStartIndex+2080-5,10);
+				//updating lineStartIndex to equal the start of the next
+				//line helps straighten the image
+				lineStartIndex = convolveWithSync(lineStartIndex+2080-2,4);
 			}
 			imageCTX.putImageData(image,0,0);
 		}
