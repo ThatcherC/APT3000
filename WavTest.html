@@ -7,7 +7,7 @@
 </head>
 <body>
 	<input type="file" id="fileInput"></br>
-	<input value="Create Image" type="button" onclick="createImage(convolveWithSync(),400)"></br>
+	<input value="Create Image" type="button" onclick="createImage(convolveWithSync(0,22050),400)"></br>
 	
 	<!-- Wave viewer isn't necessary anymore, but could be useful later -->
 	<!-- <canvas id="myChart" width="1000" height="400"></canvas></br></br> -->
@@ -97,13 +97,13 @@
 			signalMean = signalMean / filteredData.length;
 		}
 		
-		function convolveWithSync(){
-			var sync = [-1,-1,1,1];
+		function convolveWithSync(start,range){
+			var sync = [1,1,-1,-1];
 			var maxVal = 0;
 			var maxIndex = 0;
-			for(var i = 0; i < 22050; i++){
+			for(var i = start; i < start+range; i++){
 				sum = 0;
-				for(var c = 0; c < 10; c++){
+				for(var c = 0; c < 28; c++){
 					sum += (filteredData[i+c]-signalMean)*sync[c%4];
 				}
 				if(sum>maxVal){
