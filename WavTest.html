@@ -62,7 +62,7 @@
 		}
 		
 		function filterSamples(){
-			var coeffs = getLowPassFIRCoeffs(11025,1800,numTaps);
+			var coeffs = getLowPassFIRCoeffs(11025,1400,numTaps);
 			var filter = new FIRFilter(coeffs);
 			
 			//convert to Float32s
