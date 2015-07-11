@@ -6,8 +6,10 @@
 <title>APT-3000</title>
 </head>
 <body>
-	<input type="file" id="fileInput"></br>
-	<input value="Create Image" type="button" onclick="createImage(convolveWithSync(0,22050).index,400)"></br>
+	<input type="file" id="fileInput">  
+	<input value="View A" type="button" onclick="viewA()">  
+	<input value="View B" type="button" onclick="viewB()">  
+	<input value="View AB" type="button" onclick="viewAB()"></br>
 	
 	<!-- Wave viewer isn't necessary anymore, but could be useful later -->
 	<!-- <canvas id="myChart" width="1000" height="400"></canvas></br></br> -->
@@ -29,7 +31,9 @@
 		//drawing context
 		var imageCanvas = document.getElementById("output");
 		var imageCTX = imageCanvas.getContext("2d");
-		
+		//used for showing A/B/AB
+		var pixelStep = 1;
+		var pixelStart = 0;
 		
 		window.onload = function() {
 			try {
@@ -156,7 +160,7 @@
 			for(var line = 0; line < lineCount; line++){
 				//each column, currently only Channel A
 				for(var column = 0; column < 1040; column++){
-					var value = filteredData[lineStartIndex+column]*256;
+					var value = filteredData[lineStartIndex+pixelStart+column*pixelScale]*256;
 					//R=G=B for grayscale
 					image.data[line*1040*4 + column*4]=value;
 					image.data[line*1040*4 + column*4+1]=value;
@@ -166,12 +170,12 @@
 				}
 				//updating lineStartIndex to equal the start of the next
 				//line helps straighten the image
-				var conv = convolveWithSync(lineStartIndex+2080-5,10);
+				var conv = convolveWithSync(lineStartIndex+(2080*pixelScale)-5,10);
 				//If the convolution actually found something, use that
 				if(conv.score > 1.5){
 					lineStartIndex = conv.index;
 				}else{				//otherwise, just guess the next line
-					lineStartIndex+=2080;
+					lineStartIndex+=2080*pixelScale;
 				}
 			}
 			imageCTX.putImageData(image,0,0);
@@ -187,6 +191,24 @@
 			numTaps = taps;
 			filterSamples();
 		}
+		
+		function viewA(){
+			pixelScale = 1;
+			pixelStart = 0;
+			createImage(convolveWithSync(0,22050).index,700);
+		}
+		function viewB(){
+			pixelScale = 1;
+			pixelStart = 1040;
+			createImage(convolveWithSync(0,22050).index,700);
+		}
+		function viewAB(){
+			pixelScale = 2;
+			pixelStart = 0;
+			createImage(convolveWithSync(0,22050).index,350);
+		}
+		
+		
 	</script>
 
 </body>
