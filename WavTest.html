@@ -2,20 +2,34 @@
 <head>
 <script src="wav.js"></script>
 <script src="dsp.js"></script>
+<link rel="stylesheet" href="http://jthatch.com/bootstrap-custom.css">
 <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>-->
 <title>APT-3000</title>
 </head>
 <body>
-	<input type="file" id="fileInput">  
-	<input value="View A" type="button" onclick="viewA()">  
-	<input value="View B" type="button" onclick="viewB()">  
-	<input value="View AB" type="button" onclick="viewAB()"></br>
-	
-	<!-- Wave viewer isn't necessary anymore, but could be useful later -->
-	<!-- <canvas id="myChart" width="1000" height="400"></canvas></br></br> -->
-	
-	<canvas id="output" width="1040" height="400"></canvas>
-	
+	<div class="container">
+		<div class="page-header text-center">
+			<h1>APT3000</h1></br>
+			<h3>The JavaScript APT decoder</h3>
+		</div>
+		<input type="file" id="fileInput">
+		<!-- Wave viewer isn't necessary anymore, but could be useful later -->
+		<!-- <canvas id="myChart" width="1000" height="400"></canvas></br></br> --> 
+		<div class="row text-center">
+			<table style="margin:0 auto;">
+				<tr style="float:right">
+					<td>
+						<input value="View A" class="btn btn-default" type="button" onclick="viewA()">  
+						<input value="View B" class="btn btn-default"type="button" onclick="viewB()">  
+						<input value="View AB" class="btn btn-default" type="button" onclick="viewAB()">
+					</td>
+				</tr>
+				<tr>
+					<td><canvas id="output" width="1040" height="400"  style="padding-top:5"></canvas></td>
+				</tr>
+			</table>
+		</div></br>
+	</div>
 	<script src='apt3000.js'></script>
 </body>
 </html>
