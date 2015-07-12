@@ -9,10 +9,11 @@ A browser-based APT decoder for NOAA satellites.
 - [x] Perform convolution to find sync signals
 - [x] Draw image signal onto canvas
 - [x] Straighten image
-  - *A good way to do this would be to perform a convolution for every line*
-  - *Some wiggle still exists...*
-  - *Maybe doing convolution at 8320Hz and then downsampling would fix this*
-- [ ] Add scaling to the canvas
+  - ~~*Some wiggle still exists...*~~
+  - ~~*Maybe doing convolution at 8320Hz and then downsampling would fix this*~~
+  - *Fixed this by doing convolution at 11025Hz and downsampling for each line*
+- [x] Add scaling to the canvas
+  - *Limited, but it's there*
 - [ ] Implement image rotation based on satellite orbit (N/S)
   - *Telemetry? User input? File info?*
 - [ ] Implement false-color correction
