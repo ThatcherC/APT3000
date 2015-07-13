@@ -3,33 +3,65 @@
 <script src="wav.js"></script>
 <script src="dsp.js"></script>
 <link rel="stylesheet" href="http://jthatch.com/bootstrap-custom.css">
+<style>
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+</style>
 <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>-->
 <title>APT-3000</title>
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="page-header text-center">
 			<h1>APT3000</h1></br>
 			<h3>The JavaScript APT decoder</h3>
 		</div>
-		<input type="file" id="fileInput">
+		
+		<div class="row">
+			<div class="col-md-4">
+				<div class="input-group">
+					<span class="input-group-btn">
+						<span class="btn btn-default btn-file">
+							Browse&hellip; <input type="file" id="fileInput">
+						</span>
+					</span>
+					<input type="text" class="form-control" readonly>
+				</div>
+			</div>
+			<div class="col-md-1">
+			</div>
+			<div class="col-md-6">
+				<input value="View A" class="btn btn-default" type="button" onclick="viewA()">  
+				<input value="View B" class="btn btn-default"type="button" onclick="viewB()">  
+				<input value="View AB" class="btn btn-default" type="button" onclick="viewAB()">
+			</div>
+		</div>
 		<!-- Wave viewer isn't necessary anymore, but could be useful later -->
 		<!-- <canvas id="myChart" width="1000" height="400"></canvas></br></br> --> 
-		<div class="row text-center">
-			<table style="margin:0 auto;">
-				<tr style="float:right">
-					<td>
-						<input value="View A" class="btn btn-default" type="button" onclick="viewA()">  
-						<input value="View B" class="btn btn-default"type="button" onclick="viewB()">  
-						<input value="View AB" class="btn btn-default" type="button" onclick="viewAB()">
-					</td>
-				</tr>
-				<tr>
-					<td><canvas id="output" width="1040" height="400"  style="padding-top:5"></canvas></td>
-				</tr>
-			</table>
-		</div></br>
+		<div class="row">
+			<div class="col-md-4">
+				<canvas id="output" width="1040" height="400"  style="padding-top:5"></canvas>
+			</div>
+		</div>
 	</div>
+	</br>
 	<script src='apt3000.js'></script>
 </body>
 </html>
