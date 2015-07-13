@@ -21,6 +21,7 @@ var pixelStep = 1;
 var pixelStart = 0;
 
 window.onload = function() {
+	document.getElementById('spinner').style.visibility='hidden'
 	try {
 	  FileReader = FileReader;
 	}
@@ -33,6 +34,8 @@ window.onload = function() {
 	fileInput.addEventListener('change', function(e) {
 		var file = fileInput.files[0];
 		//console.log(file);
+		
+		document.getElementById('spinner').style.visibility='visible';
 		
 		wavFile = new wav(file);
 		wavFile.onloadend = function () {
@@ -66,6 +69,8 @@ function filterSamples(){
 	console.log("Filtered");
 	
 	normalizeData();
+	document.getElementById('spinner').style.visibility='hidden';
+	
 	//uncomment if using the chart
 	//updateChart();
 }
