@@ -153,12 +153,13 @@ function updateChart(){
 
 //starting index comes from convolution, lineCount comes from math
 //this kind of comes from https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas
-function createImage(startingIndex,lineCount){
+function createImage(startingIndex){
+	lineCount = Math.floor(filteredData.length/5513)/pixelScale;
 	imageCanvas.height = lineCount;
 	var image = imageCTX.createImageData(1040,lineCount);
 	
 	var lineStartIndex = startingIndex;
-	console.log(Math.floor(filteredData.length/5513)+" possible lines");
+	console.log(lineCount+" possible lines");
 	
 	var downSampler = new Downsampler(11025,4160,coeffs);
 	var thisLineData;
@@ -205,15 +206,15 @@ function setTaps(taps){
 function viewA(){
 	pixelScale = 1;
 	pixelStart = 0;
-	createImage(convolveWithSync(0,22050).index,700);
+	createImage(convolveWithSync(0,22050).index);
 }
 function viewB(){
 	pixelScale = 1;
 	pixelStart = 1040;
-	createImage(convolveWithSync(0,22050).index,700);
+	createImage(convolveWithSync(0,22050).index);
 }
 function viewAB(){
 	pixelScale = 2;
 	pixelStart = 0;
-	createImage(convolveWithSync(0,22050).index,350);
+	createImage(convolveWithSync(0,22050).index);
 }
