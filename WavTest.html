@@ -30,11 +30,19 @@
 </head>
 <body>
 	<div class="container-fluid">
-		<div class="page-header text-center">
-			<h1>APT3000</h1></br>
-			<h3>The JavaScript APT decoder</h3>
+		<div class="row">
+			<div class="col-lg-7">
+				<div class="page-header">
+					<h1>APT3000</h1></br>
+					<h3>The JavaScript APT decoder</h3>
+				</div>
+			</div>
+			<div class="col-lg-5">
+				<div class="well" style="margin:42">
+					<p>Instructions</p>
+				</div>
+			</div>
 		</div>
-		
 		<div class="row">
 			<div class="col-md-4">
 				<div class="input-group">
@@ -43,7 +51,7 @@
 							Browse&hellip; <input type="file" id="fileInput">
 						</span>
 					</span>
-					<input type="text" class="form-control" readonly>
+					<em><input type="text" class="form-control" id="fileName" readonly></em>
 				</div>
 			</div>
 			<div class="col-md-1">
@@ -51,10 +59,13 @@
 				  Loading…
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-3" id="buttons">
 				<input value="View A" class="btn btn-default" type="button" onclick="viewA()">  
 				<input value="View B" class="btn btn-default"type="button" onclick="viewB()">  
 				<input value="View AB" class="btn btn-default" type="button" onclick="viewAB()">
+			</div>
+			<div class="col-md-3">
+				 <div class="alert-small alert-danger" role="alert" id="alert"></div>
 			</div>
 		</div>
 		<!-- Wave viewer isn't necessary anymore, but could be useful later -->

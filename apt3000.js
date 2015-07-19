@@ -21,7 +21,10 @@ var pixelStep = 1;
 var pixelStart = 0;
 
 window.onload = function() {
-	document.getElementById('spinner').style.visibility='hidden'
+	document.getElementById('spinner').style.visibility='hidden';
+	document.getElementById('buttons').style.visibility='hidden';
+	document.getElementById('alert').style.visibility='hidden';
+	
 	try {
 	  FileReader = FileReader;
 	}
@@ -33,21 +36,28 @@ window.onload = function() {
 	
 	fileInput.addEventListener('change', function(e) {
 		var file = fileInput.files[0];
-		//console.log(file);
+		document.getElementById('fileName').value=file.name;
 		
 		document.getElementById('spinner').style.visibility='visible';
+		document.getElementById('buttons').style.visibility='hidden';
+		document.getElementById('alert').style.visibility='hidden';
 		
 		wavFile = new wav(file);
 		wavFile.onloadend = function () {
 			console.log("loaded");
-			console.log(wavFile);
 			
-			//rectification
-			for(var c = 0; c<wavFile.dataSamples.length;c++){
-				wavFile.dataSamples[c] = Math.abs(wavFile.dataSamples[c]);
+			if(wavFile.sampleRate!=11025){
+				document.getElementById('alert').innerHTML="File must have a 11025Hz sample rate";
+				document.getElementById('alert').style.visibility='visible';
+				document.getElementById('spinner').style.visibility='hidden';
+			}else{
+				//rectification
+				for(var c = 0; c<wavFile.dataSamples.length;c++){
+					wavFile.dataSamples[c] = Math.abs(wavFile.dataSamples[c]);
+				}
+				console.log("rectified");
+				filterSamples();
 			}
-			console.log("rectified");
-			filterSamples();
 		};
 	});
 }
@@ -70,6 +80,7 @@ function filterSamples(){
 	
 	normalizeData();
 	document.getElementById('spinner').style.visibility='hidden';
+	document.getElementById('buttons').style.visibility='visible';
 	
 	//uncomment if using the chart
 	//updateChart();
